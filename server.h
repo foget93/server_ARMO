@@ -7,6 +7,8 @@
 #include <QTcpSocket>
 #include <QLabel>
 #include <QImage>
+#include <QLineEdit>
+#include <QPushButton>
 //=======================================================================
 
 class Server : public QWidget
@@ -14,19 +16,32 @@ class Server : public QWidget
     Q_OBJECT
 
 private:
-    QTcpServer* p_tcpServer;
-    QLabel*     p_txt;
-    QLabel*     p_labelForPicture;
-    quint32     nextBlockSize;
+    QTcpServer*             ptcpServer;
+    QTcpSocket*             pClientSocket;
+    QVector<QTcpSocket*>    Sockets;
+
+    QLabel*                 plabelForImage;
+    QLabel*                 plabelInfo;
+
+    QLabel*                 lblPort;
+    QLineEdit*              plineEditForPort;
+    QPushButton*            pbtnListen;
+
+    QString                 imageName;
+    quint32                 nextBlockSize;
+
 
 private:
     void sendToClient(QTcpSocket* pSocket, const QString& str);
 
 public:
-    Server(int Port, QWidget *parent = nullptr);
+    explicit Server(QWidget *parent = nullptr);
+    void startServer();
 
 public slots:
-    virtual void slotNewConnection();
-            void slotReadClient();
+     //void incomingConnection(qintptr socketDescriptor) override;
+    void slotNewConnection();
+    void slotReadClient();
+    void on_btnListen();
 };
 #endif // SERVER_H
